@@ -59,8 +59,7 @@ const userSchema = new mongoose.Schema(
 );
 
 // ─── Indexes ─────────────────────────────────────────────────────────────────
-// email: unique — enforced in schema, but explicit index for query performance
-userSchema.index({ email: 1 }, { unique: true });
+// email unique index is created automatically by unique:true on the field definition.
 // role: frequently filtered (e.g. "find all workers", admin dashboards)
 userSchema.index({ role: 1 });
 // isActive + role: compound — "find all active workers/shops"

@@ -134,16 +134,16 @@ const shopProfileSchema = new mongoose.Schema(
 );
 
 // ─── Indexes ─────────────────────────────────────────────────────────────────
+// user unique index is created automatically by unique:true on the field definition.
 // GeoJSON 2dsphere — workers searching for nearby shops
 shopProfileSchema.index({ location: '2dsphere' });
 // Industry — workers filtering by industry
 shopProfileSchema.index({ industry: 1 });
 // isPublic + isVerified — worker-side discovery filter
 shopProfileSchema.index({ isPublic: 1, isVerified: 1 });
-// user foreign key
-shopProfileSchema.index({ user: 1 }, { unique: true });
 // businessName text — search autocomplete
 shopProfileSchema.index({ businessName: 'text' });
+
 
 const ShopProfile = mongoose.model('ShopProfile', shopProfileSchema);
 module.exports = ShopProfile;

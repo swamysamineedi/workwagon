@@ -130,6 +130,7 @@ const workerProfileSchema = new mongoose.Schema(
 );
 
 // ─── Indexes ─────────────────────────────────────────────────────────────────
+// user unique index is created automatically by unique:true on the field definition.
 // GeoJSON 2dsphere — required for $near / $geoWithin queries
 workerProfileSchema.index({ location: '2dsphere' });
 // Skills: Shops search "find workers with skill X"
@@ -140,8 +141,7 @@ workerProfileSchema.index({ jobCategories: 1 });
 workerProfileSchema.index({ 'availability.isAvailable': 1 });
 // isPublic + isAvailable: combined filter for shop-side discovery
 workerProfileSchema.index({ isPublic: 1, 'availability.isAvailable': 1 });
-// user: foreign key lookups
-workerProfileSchema.index({ user: 1 }, { unique: true });
+
 
 const WorkerProfile = mongoose.model('WorkerProfile', workerProfileSchema);
 module.exports = WorkerProfile;
