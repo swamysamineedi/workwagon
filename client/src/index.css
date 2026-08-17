@@ -1,0 +1,107 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #0f172a;
+  color: #e2e8f0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#root {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.foundation-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  width: 100%;
+}
+
+.foundation-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 1rem;
+  padding: 3rem 2.5rem;
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+}
+
+.foundation-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #38bdf8;
+  margin-bottom: 0.5rem;
+}
+
+.foundation-subtitle {
+  font-size: 1rem;
+  color: #94a3b8;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.foundation-status {
+  font-size: 1.1rem;
+  color: #4ade80;
+  margin-bottom: 2rem;
+}
+
+.api-status {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  text-align: left;
+}
+
+.api-status h2 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #64748b;
+  margin-bottom: 1rem;
+}
+
+.api-loading {
+  color: #f59e0b;
+  font-size: 0.9rem;
+}
+
+.api-error {
+  color: #f87171;
+  font-size: 0.9rem;
+}
+
+.api-response p {
+  color: #4ade80;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.api-response pre {
+  background: #1e293b;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  overflow-x: auto;
+  line-height: 1.6;
+}

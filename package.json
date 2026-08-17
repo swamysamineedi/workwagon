@@ -1,0 +1,11 @@
+{
+  "name": "workwagon",
+  "version": "1.0.0",
+  "description": "Work Wagon — MERN Application",
+  "private": true,
+  "scripts": {
+    "server": "npm.cmd --prefix server run dev",
+    "client": "npm.cmd --prefix client run dev",
+    "dev": "start npm.cmd --prefix server run dev && npm.cmd --prefix client run dev"
+  }
+}
