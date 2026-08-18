@@ -69,17 +69,8 @@ const shopProfileSchema = new mongoose.Schema(
     },
 
     // ── Location ─────────────────────────────────────────────────────────────
-    // GeoJSON Point — enables proximity search by workers
+    // Simplified location (GeoJSON removed due to registration index conflicts)
     location: {
-      type: {
-        type: String,
-        enum: ['Point'],
-        default: 'Point',
-      },
-      coordinates: {
-        type: [Number], // [longitude, latitude]
-        default: undefined,
-      },
       address: { type: String, trim: true },
       city: { type: String, trim: true },
       region: { type: String, trim: true },
@@ -135,8 +126,6 @@ const shopProfileSchema = new mongoose.Schema(
 
 // ─── Indexes ─────────────────────────────────────────────────────────────────
 // user unique index is created automatically by unique:true on the field definition.
-// GeoJSON 2dsphere — workers searching for nearby shops
-shopProfileSchema.index({ location: '2dsphere' });
 // Industry — workers filtering by industry
 shopProfileSchema.index({ industry: 1 });
 // isPublic + isVerified — worker-side discovery filter
