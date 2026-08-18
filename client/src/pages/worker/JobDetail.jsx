@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { vacancyService } from '../../services/vacancyService';
 import Badge from '../../components/common/Badge';
+import Button from '../../components/common/Button';
 import Loading from '../../components/common/Loading';
 import ErrorState from '../../components/common/ErrorState';
+import { requestService } from '../../services/requestService';
 
 const STATUS_VARIANTS = { open: 'success', paused: 'warning', closed: 'muted', filled: 'primary', expired: 'error' };
 
@@ -12,6 +14,7 @@ export default function JobDetail() {
   const [vacancy, setVacancy] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [requesting, setRequesting] = useState(false);
 
   useEffect(() => {
     vacancyService.getById(id)
@@ -19,6 +22,18 @@ export default function JobDetail() {
       .catch(() => setError('Vacancy not found or unavailable.'))
       .finally(() => setLoading(false));
   }, [id]);
+
+  const handleExpressInterest = async () => {
+    setRequesting(true);
+    try {
+      await requestService.create(vacancy.shop.user, vacancy._id, 'I am interested in this role.');
+      alert('Interest expressed successfully!');
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to express interest');
+    } finally {
+      setRequesting(false);
+    }
+  };
 
   if (loading) return <Loading />;
   if (error || !vacancy) return <ErrorState message={error} />;
@@ -109,13 +124,16 @@ export default function JobDetail() {
             </div>
 
             {status === 'open' && available > 0 && (
-              <div style={{
-                marginTop: '1.25rem', padding: '0.875rem',
-                background: 'var(--primary-glow)', border: '1px solid var(--primary-border)',
-                borderRadius: 'var(--r)', textAlign: 'center',
-                fontSize: '0.8rem', color: 'var(--text-muted)',
-              }}>
-                🤝 Connection requests coming in next phase
+              <div style={{ marginTop: '1.25rem' }}>
+                <Button 
+                  variant="primary" 
+                  size="lg" 
+                  style={{ width: '100%' }} 
+                  onClick={handleExpressInterest}
+                  loading={requesting}
+                >
+                  {requesting ? 'Sending...' : 'Express Interest 🤝'}
+                </Button>
               </div>
             )}
           </div>

@@ -4,6 +4,9 @@ import Avatar from '../../components/common/Avatar';
 import Loading from '../../components/common/Loading';
 import ErrorState from '../../components/common/ErrorState';
 import EmptyState from '../../components/common/EmptyState';
+import Button from '../../components/common/Button';
+import { requestService } from '../../services/requestService';
+import { vacancyService } from '../../services/vacancyService';
 
 export default function FindWorkers() {
   const [workers, setWorkers] = useState([]);
@@ -13,6 +16,13 @@ export default function FindWorkers() {
   const [loading, setLoading] = useState(true);
   const [error, setError]   = useState('');
   const [filters, setFilters] = useState({ skill: '', city: '', available: '' });
+
+  // Invite Modal state
+  const [inviteModalOpen, setInviteModalOpen] = useState(false);
+  const [selectedWorker, setSelectedWorker] = useState(null);
+  const [myVacancies, setMyVacancies] = useState([]);
+  const [selectedVacancyId, setSelectedVacancyId] = useState('');
+  const [inviting, setInviting] = useState(false);
 
   const setF = (k) => (e) => setFilters((p) => ({ ...p, [k]: e.target.value }));
 
@@ -30,6 +40,34 @@ export default function FindWorkers() {
   }, [filters]);
 
   useEffect(() => { load(1); }, [load]);
+
+  const handleOpenInvite = async (worker) => {
+    setSelectedWorker(worker);
+    setInviteModalOpen(true);
+    try {
+      const res = await vacancyService.getMyVacancies({ status: 'open' });
+      setMyVacancies(res.data.data.vacancies || []);
+      if (res.data.data.vacancies?.length > 0) {
+        setSelectedVacancyId(res.data.data.vacancies[0]._id);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleSendInvite = async () => {
+    if (!selectedVacancyId) return alert('Please select a vacancy');
+    setInviting(true);
+    try {
+      await requestService.create(selectedWorker.user, selectedVacancyId, 'We would like to invite you to apply for this position.');
+      alert('Invite sent successfully!');
+      setInviteModalOpen(false);
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to send invite');
+    } finally {
+      setInviting(false);
+    }
+  };
 
   return (
     <div className="page fade-in">
@@ -92,13 +130,10 @@ export default function FindWorkers() {
                       </div>
                     )}
                   </div>
-                  <div className="profile-card-footer">
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', flex: 1 }}>
-                      🤝 Requests coming next phase
-                    </div>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                      {w.profileCompleteness}% complete
-                    </span>
+                  <div className="profile-card-footer" style={{ padding: '1rem', borderTop: '1px solid var(--border)' }}>
+                    <Button variant="primary" size="sm" style={{ width: '100%' }} onClick={() => handleOpenInvite(w)}>
+                      Invite to Vacancy
+                    </Button>
                   </div>
                 </div>
               );
@@ -115,6 +150,33 @@ export default function FindWorkers() {
             </div>
           )}
         </>
+      )}
+
+      {/* Invite Modal */}
+      {inviteModalOpen && (
+        <div className="modal-backdrop visible">
+          <div className="modal card" style={{ maxWidth: 400 }}>
+            <h3 style={{ marginBottom: '1rem' }}>Invite {selectedWorker?.firstName}</h3>
+            <div className="form-group">
+              <label className="form-label">Select Vacancy</label>
+              {myVacancies.length === 0 ? (
+                <p style={{ color: 'var(--error)' }}>You have no open vacancies to invite to.</p>
+              ) : (
+                <select className="form-input form-select" value={selectedVacancyId} onChange={e => setSelectedVacancyId(e.target.value)}>
+                  {myVacancies.map(v => (
+                    <option key={v._id} value={v._id}>{v.title}</option>
+                  ))}
+                </select>
+              )}
+            </div>
+            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.5rem', justifyContent: 'flex-end' }}>
+              <Button variant="secondary" onClick={() => setInviteModalOpen(false)}>Cancel</Button>
+              <Button variant="primary" onClick={handleSendInvite} disabled={myVacancies.length === 0} loading={inviting}>
+                Send Invite
+              </Button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

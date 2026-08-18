@@ -16,6 +16,7 @@ import WorkerDashboard from './pages/worker/WorkerDashboard';
 import WorkerProfile   from './pages/worker/WorkerProfile';
 import DiscoverJobs    from './pages/worker/DiscoverJobs';
 import JobDetail       from './pages/worker/JobDetail';
+import WorkerConnections from './pages/worker/WorkerConnections';
 
 // Shop pages
 import ShopDashboard    from './pages/shop/ShopDashboard';
@@ -24,6 +25,7 @@ import ManageVacancies  from './pages/shop/ManageVacancies';
 import CreateVacancy    from './pages/shop/CreateVacancy';
 import EditVacancy      from './pages/shop/EditVacancy';
 import FindWorkers      from './pages/shop/FindWorkers';
+import ShopConnections  from './pages/shop/ShopConnections';
 
 export default function App() {
   return (
@@ -49,6 +51,7 @@ export default function App() {
           <Route path="profile"   element={<WorkerProfile />} />
           <Route path="jobs"      element={<DiscoverJobs />} />
           <Route path="jobs/:id"  element={<JobDetail />} />
+          <Route path="connections" element={<WorkerConnections />} />
         </Route>
 
         {/* ── Shop area ───────────────────────────────────────────────────── */}
@@ -66,6 +69,7 @@ export default function App() {
           <Route path="vacancies/new"         element={<CreateVacancy />} />
           <Route path="vacancies/:id/edit"    element={<EditVacancy />} />
           <Route path="find-workers"          element={<FindWorkers />} />
+          <Route path="connections"           element={<ShopConnections />} />
         </Route>
 
         {/* ── Admin (placeholder) ─────────────────────────────────────────── */}

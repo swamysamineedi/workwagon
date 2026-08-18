@@ -29,8 +29,8 @@ router.use('/shops', require('./shops'));
 router.use('/vacancies', require('./vacancies'));
 
 // ── Future ────────────────────────────────────────────────────────────────────
-// router.use('/requests',      require('./requests'));
-// router.use('/connections',   require('./connections'));
+router.use('/requests', require('./requests'));
+router.use('/connections', require('./connections'));
 // router.use('/notifications', require('./notifications'));
 // router.use('/admin',         require('./admin'));
 

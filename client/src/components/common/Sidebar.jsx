@@ -22,6 +22,7 @@ export default function Sidebar({ role, mobileOpen, onClose }) {
   const workerLinks = [
     { to: '/worker', icon: '🏠', label: 'Home' },
     { to: '/worker/jobs', icon: '🔍', label: 'Discover Jobs' },
+    { to: '/worker/connections', icon: '🤝', label: 'Connections' },
     { to: '/worker/profile', icon: '👤', label: 'My Profile' },
   ];
 
@@ -29,6 +30,7 @@ export default function Sidebar({ role, mobileOpen, onClose }) {
     { to: '/shop', icon: '🏠', label: 'Home' },
     { to: '/shop/vacancies', icon: '📋', label: 'My Vacancies' },
     { to: '/shop/find-workers', icon: '🔍', label: 'Find Workers' },
+    { to: '/shop/connections', icon: '🤝', label: 'Connections' },
     { to: '/shop/profile', icon: '🏢', label: 'Business Profile' },
   ];
 
