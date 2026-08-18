@@ -95,19 +95,11 @@ const workerProfileSchema = new mongoose.Schema(
     },
 
     // ── Location ─────────────────────────────────────────────────────────────
-    // GeoJSON Point — enables $near queries for proximity matching
+    // Flat fields for city/region display and text filtering.
+    // GeoJSON / 2dsphere proximity search reserved for a future phase.
     location: {
-      type: {
-        type: String,
-        enum: ['Point'],
-        default: 'Point',
-      },
-      coordinates: {
-        type: [Number], // [longitude, latitude]
-        default: undefined,
-      },
-      city: { type: String, trim: true },
-      region: { type: String, trim: true },
+      city:    { type: String, trim: true },
+      region:  { type: String, trim: true },
       country: { type: String, trim: true, default: 'Australia' },
     },
 
@@ -131,8 +123,6 @@ const workerProfileSchema = new mongoose.Schema(
 
 // ─── Indexes ─────────────────────────────────────────────────────────────────
 // user unique index is created automatically by unique:true on the field definition.
-// GeoJSON 2dsphere — required for $near / $geoWithin queries
-workerProfileSchema.index({ location: '2dsphere' });
 // Skills: Shops search "find workers with skill X"
 workerProfileSchema.index({ skills: 1 });
 // Job categories: broad category matching
@@ -141,6 +131,7 @@ workerProfileSchema.index({ jobCategories: 1 });
 workerProfileSchema.index({ 'availability.isAvailable': 1 });
 // isPublic + isAvailable: combined filter for shop-side discovery
 workerProfileSchema.index({ isPublic: 1, 'availability.isAvailable': 1 });
+
 
 
 const WorkerProfile = mongoose.model('WorkerProfile', workerProfileSchema);

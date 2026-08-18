@@ -1,42 +1,89 @@
-import { useState, useEffect } from 'react';
-import api from './services/api';
-import './App.css';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/auth/ProtectedRoute';
+import AppLayout from './layouts/AppLayout';
 
-function App() {
-  const [healthStatus, setHealthStatus] = useState({ loading: true, data: null, error: null });
+// Public pages
+import LandingPage         from './pages/LandingPage';
+import LoginPage           from './pages/auth/LoginPage';
+import RegisterWorkerPage  from './pages/auth/RegisterWorkerPage';
+import RegisterShopPage    from './pages/auth/RegisterShopPage';
+import UnauthorizedPage    from './pages/UnauthorizedPage';
+import NotFoundPage        from './pages/NotFoundPage';
 
-  useEffect(() => {
-    api
-      .get('/api/health')
-      .then((res) => setHealthStatus({ loading: false, data: res.data, error: null }))
-      .catch((err) =>
-        setHealthStatus({ loading: false, data: null, error: err.message })
-      );
-  }, []);
+// Worker pages
+import WorkerDashboard from './pages/worker/WorkerDashboard';
+import WorkerProfile   from './pages/worker/WorkerProfile';
+import DiscoverJobs    from './pages/worker/DiscoverJobs';
+import JobDetail       from './pages/worker/JobDetail';
 
+// Shop pages
+import ShopDashboard    from './pages/shop/ShopDashboard';
+import ShopProfile      from './pages/shop/ShopProfile';
+import ManageVacancies  from './pages/shop/ManageVacancies';
+import CreateVacancy    from './pages/shop/CreateVacancy';
+import EditVacancy      from './pages/shop/EditVacancy';
+import FindWorkers      from './pages/shop/FindWorkers';
+
+export default function App() {
   return (
-    <div className="foundation-container">
-      <div className="foundation-card">
-        <h1 className="foundation-title">Work Wagon</h1>
-        <p className="foundation-subtitle">MERN Application</p>
-        <p className="foundation-status">Frontend is running ✅</p>
+    <AuthProvider>
+      <Routes>
+        {/* ── Public ──────────────────────────────────────────────────────── */}
+        <Route path="/"                    element={<LandingPage />} />
+        <Route path="/login"               element={<LoginPage />} />
+        <Route path="/register/worker"     element={<RegisterWorkerPage />} />
+        <Route path="/register/shop"       element={<RegisterShopPage />} />
+        <Route path="/unauthorized"        element={<UnauthorizedPage />} />
 
-        <div className="api-status">
-          <h2>Backend Health Check</h2>
-          {healthStatus.loading && <p className="api-loading">Connecting to backend…</p>}
-          {healthStatus.error && (
-            <p className="api-error">❌ Backend unreachable — {healthStatus.error}</p>
-          )}
-          {healthStatus.data && (
-            <div className="api-response">
-              <p>✅ Backend connected</p>
-              <pre>{JSON.stringify(healthStatus.data, null, 2)}</pre>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+        {/* ── Worker area ─────────────────────────────────────────────────── */}
+        <Route
+          path="/worker"
+          element={
+            <ProtectedRoute roles={['worker']}>
+              <AppLayout role="worker" />
+            </ProtectedRoute>
+          }
+        >
+          <Route index            element={<WorkerDashboard />} />
+          <Route path="profile"   element={<WorkerProfile />} />
+          <Route path="jobs"      element={<DiscoverJobs />} />
+          <Route path="jobs/:id"  element={<JobDetail />} />
+        </Route>
+
+        {/* ── Shop area ───────────────────────────────────────────────────── */}
+        <Route
+          path="/shop"
+          element={
+            <ProtectedRoute roles={['shop']}>
+              <AppLayout role="shop" />
+            </ProtectedRoute>
+          }
+        >
+          <Route index                        element={<ShopDashboard />} />
+          <Route path="profile"               element={<ShopProfile />} />
+          <Route path="vacancies"             element={<ManageVacancies />} />
+          <Route path="vacancies/new"         element={<CreateVacancy />} />
+          <Route path="vacancies/:id/edit"    element={<EditVacancy />} />
+          <Route path="find-workers"          element={<FindWorkers />} />
+        </Route>
+
+        {/* ── Admin (placeholder) ─────────────────────────────────────────── */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute roles={['admin']}>
+              <div className="page">
+                <h1 style={{ color: 'var(--text)' }}>Admin Panel</h1>
+                <p style={{ color: 'var(--text-muted)' }}>Coming soon.</p>
+              </div>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ── 404 ─────────────────────────────────────────────────────────── */}
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </AuthProvider>
   );
 }
-
-export default App;

@@ -20,13 +20,13 @@ router.use('/health', require('./health'));
 router.use('/auth', require('./auth'));
 
 // ── Phase 4 ───────────────────────────────────────────────────────────────────
-// router.use('/workers', require('./workers'));
+router.use('/workers', require('./workers'));
 
 // ── Phase 5 ───────────────────────────────────────────────────────────────────
-// router.use('/shops', require('./shops'));
+router.use('/shops', require('./shops'));
 
 // ── Phase 6 ───────────────────────────────────────────────────────────────────
-// router.use('/vacancies', require('./vacancies'));
+router.use('/vacancies', require('./vacancies'));
 
 // ── Future ────────────────────────────────────────────────────────────────────
 // router.use('/requests',      require('./requests'));

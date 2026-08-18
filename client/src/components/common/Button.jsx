@@ -1,15 +1,18 @@
 export default function Button({
-  children, variant = 'primary', size = 'md',
-  loading = false, disabled = false, className = '', type = 'button', ...props
+  children, variant = 'primary', size = '', loading = false,
+  className = '', type = 'button', disabled, onClick, ...rest
 }) {
+  const cls = ['btn', `btn-${variant}`, size && `btn-${size}`, className]
+    .filter(Boolean).join(' ');
   return (
     <button
       type={type}
+      className={cls}
       disabled={disabled || loading}
-      className={`btn btn-${variant} btn-${size} ${className}`}
-      {...props}
+      onClick={onClick}
+      {...rest}
     >
-      {loading && <span className={`spinner spinner-sm`} style={{ marginRight: children ? '0.25rem' : 0 }} />}
+      {loading && <span className="spinner spinner-sm" />}
       {children}
     </button>
   );
