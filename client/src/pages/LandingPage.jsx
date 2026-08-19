@@ -254,7 +254,6 @@ export default function LandingPage() {
           <div className="landing-footer-links">
             <a href="#features">Features</a>
             <a href="#how-it-works">How It Works</a>
-            <Link to="/login">Login</Link>
           </div>
         </div>
       </footer>

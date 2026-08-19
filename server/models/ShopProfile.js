@@ -91,10 +91,23 @@ const shopProfileSchema = new mongoose.Schema(
     },
 
     // ── Trust & Verification ──────────────────────────────────────────────────
-    isVerified: {
-      // Admin-verified business
-      type: Boolean,
-      default: false,
+    verificationStatus: {
+      // Admin verification lifecycle
+      type: String,
+      enum: ['PENDING', 'APPROVED', 'REJECTED'],
+      default: 'PENDING',
+    },
+    verificationReason: {
+      type: String,
+      trim: true,
+      maxlength: 500,
+    },
+    verifiedAt: {
+      type: Date,
+    },
+    verifiedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User', // Admin who verified/rejected
     },
     isPublic: {
       // Controls worker discoverability
@@ -128,8 +141,8 @@ const shopProfileSchema = new mongoose.Schema(
 // user unique index is created automatically by unique:true on the field definition.
 // Industry — workers filtering by industry
 shopProfileSchema.index({ industry: 1 });
-// isPublic + isVerified — worker-side discovery filter
-shopProfileSchema.index({ isPublic: 1, isVerified: 1 });
+// isPublic + verificationStatus — worker-side discovery filter
+shopProfileSchema.index({ isPublic: 1, verificationStatus: 1 });
 // businessName text — search autocomplete
 shopProfileSchema.index({ businessName: 'text' });
 

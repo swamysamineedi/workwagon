@@ -63,12 +63,14 @@ const getMyVacancies = async (userId, query) => {
 const browseVacancies = async (query) => {
   const {
     category, skill, employmentType, city,
-    minPay, maxPay,
+    minPay, maxPay, search, minExperience,
     page = 1, limit = 20,
     sort = 'newest',
   } = query;
 
-  const filter = { status: 'open' };
+  // Only show open and approved vacancies
+  const filter = { status: 'open', moderationStatus: 'APPROVED' };
+  if (search) filter.title = new RegExp(search.trim(), 'i');
   if (category) filter.category = new RegExp(category, 'i');
   if (skill) filter.requiredSkills = { $in: [skill] };
   if (employmentType) filter.employmentType = employmentType;
@@ -86,7 +88,7 @@ const browseVacancies = async (query) => {
   const skip = (Number(page) - 1) * Number(limit);
   const [vacancies, total] = await Promise.all([
     Vacancy.find(filter)
-      .populate('shop', 'businessName industry logoUrl location isVerified')
+      .populate('shop', 'businessName industry logoUrl location verificationStatus')
       .sort(sortMap[sort] || sortMap.newest)
       .skip(skip)
       .limit(Number(limit)),
@@ -101,7 +103,8 @@ const browseVacancies = async (query) => {
 const getVacancyById = async (vacancyId) => {
   const vacancy = await Vacancy.findById(vacancyId).populate(
     'shop',
-    'businessName industry description logoUrl location phone website isVerified'
+    // Include 'user' so the frontend can use shop.user._id when sending a request
+    'businessName industry description logoUrl location phone website verificationStatus user'
   );
   if (!vacancy) throw new AppError('Vacancy not found.', 404);
   return vacancy;

@@ -35,7 +35,13 @@ export default function Sidebar({ role, mobileOpen, onClose }) {
   ];
 
   const adminLinks = [
-    { to: '/admin', icon: '🛡️', label: 'Admin Home' },
+    { to: '/admin', icon: '🛡️', label: 'Dashboard' },
+    { to: '/admin/users', icon: '👷', label: 'Workers' },
+    { to: '/admin/businesses', icon: '🏪', label: 'Businesses' },
+    { to: '/admin/verifications', icon: '✅', label: 'Verifications' },
+    { to: '/admin/vacancies', icon: '📋', label: 'Vacancies' },
+    { to: '/admin/reports', icon: '🚩', label: 'Reports' },
+    { to: '/admin/analytics', icon: '📈', label: 'Analytics' },
   ];
 
   const links = role === 'worker' ? workerLinks : role === 'shop' ? shopLinks : adminLinks;

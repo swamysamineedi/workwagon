@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import AppLayout from './layouts/AppLayout';
@@ -10,6 +11,7 @@ import RegisterWorkerPage  from './pages/auth/RegisterWorkerPage';
 import RegisterShopPage    from './pages/auth/RegisterShopPage';
 import UnauthorizedPage    from './pages/UnauthorizedPage';
 import NotFoundPage        from './pages/NotFoundPage';
+import AdminLoginPage      from './pages/auth/AdminLoginPage';
 
 // Worker pages
 import WorkerDashboard from './pages/worker/WorkerDashboard';
@@ -27,15 +29,26 @@ import EditVacancy      from './pages/shop/EditVacancy';
 import FindWorkers      from './pages/shop/FindWorkers';
 import ShopConnections  from './pages/shop/ShopConnections';
 
+// Admin pages
+import AdminDashboard     from './pages/admin/AdminDashboard';
+import UsersManagement    from './pages/admin/UsersManagement';
+import BusinessesManagement from './pages/admin/BusinessesManagement';
+import Verifications      from './pages/admin/Verifications';
+import VacancyModeration  from './pages/admin/VacancyModeration';
+import ReportsManagement  from './pages/admin/ReportsManagement';
+import Analytics          from './pages/admin/Analytics';
+
 export default function App() {
   return (
     <AuthProvider>
+      <Toaster position="top-right" />
       <Routes>
         {/* ── Public ──────────────────────────────────────────────────────── */}
         <Route path="/"                    element={<LandingPage />} />
         <Route path="/login"               element={<LoginPage />} />
         <Route path="/register/worker"     element={<RegisterWorkerPage />} />
         <Route path="/register/shop"       element={<RegisterShopPage />} />
+        <Route path="/admin/login"         element={<AdminLoginPage />} />
         <Route path="/unauthorized"        element={<UnauthorizedPage />} />
 
         {/* ── Worker area ─────────────────────────────────────────────────── */}
@@ -72,18 +85,23 @@ export default function App() {
           <Route path="connections"           element={<ShopConnections />} />
         </Route>
 
-        {/* ── Admin (placeholder) ─────────────────────────────────────────── */}
+        {/* ── Admin ─────────────────────────────────────────────────────────── */}
         <Route
           path="/admin"
           element={
-            <ProtectedRoute roles={['admin']}>
-              <div className="page">
-                <h1 style={{ color: 'var(--text)' }}>Admin Panel</h1>
-                <p style={{ color: 'var(--text-muted)' }}>Coming soon.</p>
-              </div>
+            <ProtectedRoute roles={['admin']} fallback="/admin/login">
+              <AppLayout role="admin" />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="users" element={<UsersManagement />} />
+          <Route path="businesses" element={<BusinessesManagement />} />
+          <Route path="verifications" element={<Verifications />} />
+          <Route path="vacancies" element={<VacancyModeration />} />
+          <Route path="reports" element={<ReportsManagement />} />
+          <Route path="analytics" element={<Analytics />} />
+        </Route>
 
         {/* ── 404 ─────────────────────────────────────────────────────────── */}
         <Route path="*" element={<NotFoundPage />} />

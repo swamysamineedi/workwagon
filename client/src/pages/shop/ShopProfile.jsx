@@ -89,7 +89,7 @@ export default function ShopProfile() {
               <div className="progress-bar-fill" style={{ width: `${completeness}%` }} />
             </div>
           </div>
-          {profile?.isVerified && (
+          {profile?.verificationStatus === 'APPROVED' && (
             <span className="badge badge-success" style={{ alignSelf: 'flex-start' }}>✓ Verified Business</span>
           )}
         </div>

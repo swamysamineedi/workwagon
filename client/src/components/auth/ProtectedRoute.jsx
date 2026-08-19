@@ -7,7 +7,7 @@ import { useAuth } from '../../hooks/useAuth';
  * Redirects wrong-role users to /unauthorized.
  * Shows spinner while auth state is loading.
  */
-export default function ProtectedRoute({ children, roles }) {
+export default function ProtectedRoute({ children, roles, fallback = '/login' }) {
   const { isAuthenticated, user, loading } = useAuth();
   const location = useLocation();
 
@@ -20,7 +20,7 @@ export default function ProtectedRoute({ children, roles }) {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to={fallback} state={{ from: location }} replace />;
   }
 
   if (roles && !roles.includes(user?.role)) {

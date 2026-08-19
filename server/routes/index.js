@@ -32,6 +32,6 @@ router.use('/vacancies', require('./vacancies'));
 router.use('/requests', require('./requests'));
 router.use('/connections', require('./connections'));
 // router.use('/notifications', require('./notifications'));
-// router.use('/admin',         require('./admin'));
+router.use('/admin', require('./admin'));
 
 module.exports = router;

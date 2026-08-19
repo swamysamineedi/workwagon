@@ -52,7 +52,7 @@ export default function ShopDashboard() {
             <h2 className="page-hero-title">{name}</h2>
             <p className="page-hero-sub">
               {profile?.industry || 'Business'} · {profile?.location?.city || 'Location not set'}
-              {profile?.isVerified && <span className="badge badge-success" style={{ marginLeft: '0.5rem' }}>✓ Verified</span>}
+              {profile?.verificationStatus === 'APPROVED' && <span className="badge badge-success" style={{ marginLeft: '0.5rem' }}>✓ Verified</span>}
             </p>
           </div>
           <Link to="/shop/profile">

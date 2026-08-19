@@ -94,15 +94,11 @@ export default function WorkerDashboard() {
             <div className="quick-action-title">Update Profile</div>
             <div className="quick-action-sub">Keep your skills and availability current</div>
           </Link>
-          <div
-            className="quick-action"
-            style={{ opacity: 0.6, cursor: 'default' }}
-            title="Coming in next phase"
-          >
+          <Link to="/worker/connections" className="quick-action">
             <div className="quick-action-icon">🤝</div>
             <div className="quick-action-title">Connections</div>
             <div className="quick-action-sub">View and manage your work connections</div>
-          </div>
+          </Link>
         </div>
       </div>
 

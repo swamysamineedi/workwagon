@@ -9,8 +9,14 @@ const { AppError } = require('../middleware/errorHandler');
  * Creates a Connection between a Worker and a Shop for a specific Vacancy (if applicable).
  * Also increments the filledSlots on the Vacancy if one is provided.
  * Uses a Mongoose transaction to ensure atomicity.
+ *
+ * @param workerUserId  - User._id of the worker
+ * @param shopUserId    - User._id of the shop
+ * @param vacancyId     - Optional Vacancy._id
+ * @param workerRequestId - The worker's Request._id
+ * @param shopRequestId   - Optional shop's Request._id (mutual-match); null for direct-accept
  */
-const createConnection = async (workerUserId, shopUserId, vacancyId, workerRequestId, shopRequestId) => {
+const createConnection = async (workerUserId, shopUserId, vacancyId, workerRequestId, shopRequestId = null) => {
   const session = await mongoose.startSession();
   let newConnection = null;
 
@@ -38,20 +44,24 @@ const createConnection = async (workerUserId, shopUserId, vacancyId, workerReque
     }
 
     // 3. Create the Connection
-    const [conn] = await Connection.create([{
+    const connData = {
       worker: workerProfile._id,
       workerUser: workerUserId,
       shop: shopProfile._id,
       shopUser: shopUserId,
       vacancy: vacancyId || undefined,
       workerRequest: workerRequestId,
-      shopRequest: shopRequestId,
-      status: 'active'
-    }], { session });
-    
+      status: 'active',
+    };
+    // shopRequest is optional — only present in mutual-match scenario
+    if (shopRequestId) {
+      connData.shopRequest = shopRequestId;
+    }
+
+    const [conn] = await Connection.create([connData], { session });
     newConnection = conn;
 
-    // 4. Update the Vacancy filledSlots (trigger will handle 'filled' status if slots maxed)
+    // 4. Update the Vacancy filledSlots (pre-save middleware handles 'filled' status if slots max)
     if (vacancy) {
       vacancy.filledSlots += 1;
       await vacancy.save({ session });
@@ -72,7 +82,7 @@ const createConnection = async (workerUserId, shopUserId, vacancyId, workerReque
 };
 
 /**
- * Get all connections for a user
+ * Get all connections for a user (worker or shop)
  */
 const getConnections = async (userId, role) => {
   const filter = {};
@@ -85,15 +95,15 @@ const getConnections = async (userId, role) => {
   }
 
   const connections = await Connection.find(filter)
-    .populate('worker', 'firstName lastName avatarUrl skills location')
+    .populate('worker', 'firstName lastName avatarUrl skills location experienceYears availability')
     .populate('shop', 'businessName logoUrl location industry')
-    .populate('vacancy', 'title location payRate')
+    .populate('vacancy', 'title location payRate employmentType')
     .sort({ createdAt: -1 });
-    
+
   return connections;
 };
 
 module.exports = {
   createConnection,
-  getConnections
+  getConnections,
 };

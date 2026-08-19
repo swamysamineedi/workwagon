@@ -98,10 +98,29 @@ const vacancySchema = new mongoose.Schema(
     status: {
       type: String,
       enum: {
-        values: ['draft', 'open', 'filled', 'closed', 'expired'],
+        values: ['draft', 'open', 'paused', 'filled', 'closed', 'expired'],
         message: 'Invalid vacancy status',
       },
       default: 'draft',
+    },
+
+    // ── Moderation ────────────────────────────────────────────────────────────
+    moderationStatus: {
+      type: String,
+      enum: ['PENDING', 'APPROVED', 'REJECTED', 'REMOVED'],
+      default: 'APPROVED', // Default approved to preserve existing friction-free flow
+    },
+    moderationReason: {
+      type: String,
+      trim: true,
+      maxlength: 500,
+    },
+    moderatedAt: {
+      type: Date,
+    },
+    moderatedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User', // Admin user
     },
 
     // ── Scheduling ────────────────────────────────────────────────────────────
@@ -133,11 +152,10 @@ vacancySchema.virtual('availableSlots').get(function () {
 });
 
 // ─── Middleware: auto-fill status when slots fill ─────────────────────────────
-vacancySchema.pre('save', function (next) {
+vacancySchema.pre('save', function () {
   if (this.filledSlots >= this.totalSlots) {
     this.status = 'filled';
   }
-  next();
 });
 
 // ─── Indexes ─────────────────────────────────────────────────────────────────
@@ -153,6 +171,8 @@ vacancySchema.index({ status: 1, category: 1 });
 vacancySchema.index({ requiredSkills: 1 });
 // expiresAt: background job finds expired vacancies to close
 vacancySchema.index({ expiresAt: 1 });
+// moderationStatus: admin queues and worker visibility
+vacancySchema.index({ moderationStatus: 1 });
 
 const Vacancy = mongoose.model('Vacancy', vacancySchema);
 module.exports = Vacancy;

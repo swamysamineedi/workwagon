@@ -79,20 +79,37 @@ const getProfileById = async (profileId) => {
 const listWorkers = async (query) => {
   const {
     skill, category, available, city,
+    minExperience, maxExperience,
+    sort = 'completeness',
     page = 1, limit = 20,
   } = query;
 
   const filter = { isPublic: true };
-  if (available !== undefined) filter['availability.isAvailable'] = available === 'true';
-  if (skill) filter.skills = { $in: [skill] };
-  if (category) filter.jobCategories = { $in: [category] };
+  if (available !== undefined && available !== '') {
+    filter['availability.isAvailable'] = available === 'true';
+  }
+  if (skill) filter.skills = { $in: [new RegExp(skill, 'i')] };
+  if (category) filter.jobCategories = { $in: [new RegExp(category, 'i')] };
   if (city) filter['location.city'] = new RegExp(city, 'i');
+  if (minExperience !== undefined && minExperience !== '') {
+    filter.experienceYears = { ...filter.experienceYears, $gte: Number(minExperience) };
+  }
+  if (maxExperience !== undefined && maxExperience !== '') {
+    filter.experienceYears = { ...filter.experienceYears, $lte: Number(maxExperience) };
+  }
+
+  const sortMap = {
+    completeness: { profileCompleteness: -1 },
+    newest: { createdAt: -1 },
+    experience_high: { experienceYears: -1 },
+    experience_low: { experienceYears: 1 },
+  };
 
   const skip = (Number(page) - 1) * Number(limit);
   const [workers, total] = await Promise.all([
     WorkerProfile.find(filter)
       .populate('user', 'email isVerified createdAt')
-      .sort({ profileCompleteness: -1 })
+      .sort(sortMap[sort] || sortMap.completeness)
       .skip(skip)
       .limit(Number(limit)),
     WorkerProfile.countDocuments(filter),

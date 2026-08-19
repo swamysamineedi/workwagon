@@ -697,6 +697,57 @@ img { max-width: 100%; display: block; }
 }
 .landing-nav-link:hover { color: var(--text); background: var(--surface-2); }
 .landing-nav-actions { display: flex; align-items: center; gap: 0.625rem; }
+
+/* Login Dropdown */
+.login-dropdown-wrapper {
+  position: relative;
+  display: inline-block;
+}
+.login-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  box-shadow: var(--shadow-lg);
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-5px);
+  transition: opacity var(--t), transform var(--t), visibility var(--t);
+  z-index: 250;
+}
+.login-dropdown-wrapper:hover .login-dropdown-menu,
+.login-dropdown-wrapper:focus-within .login-dropdown-menu,
+.login-dropdown-wrapper.open .login-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.login-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 1rem;
+  border-radius: var(--r-sm);
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background var(--t), color var(--t);
+}
+.login-dropdown-item:hover,
+.login-dropdown-item:focus {
+  background: var(--surface-2);
+  color: var(--primary-light);
+  outline: none;
+}
+
 @media (max-width: 768px) {
   .landing-nav-links { display: none; }
 }

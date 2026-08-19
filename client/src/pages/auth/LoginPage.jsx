@@ -9,6 +9,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname;
+  const selectedRole = location.state?.role; // 'worker' or 'shop'
 
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
@@ -22,6 +23,11 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const user = await login(form.email, form.password);
+      
+      if (selectedRole && user.role !== selectedRole && user.role !== 'admin') {
+         setError(`You logged in with a ${user.role} account, but selected ${selectedRole}. You are being redirected to your dashboard.`);
+      }
+
       const redirect = from || (user.role === 'worker' ? '/worker' : user.role === 'shop' ? '/shop' : '/admin');
       navigate(redirect, { replace: true });
     } catch (err) {
@@ -73,7 +79,9 @@ export default function LoginPage() {
       {/* Form panel */}
       <div className="auth-form-panel">
         <div className="auth-form-header">
-          <h1 className="auth-form-title">Sign in</h1>
+          <h1 className="auth-form-title">
+            {selectedRole === 'worker' ? 'Sign in as Worker' : selectedRole === 'shop' ? 'Sign in as Business' : 'Sign in'}
+          </h1>
           <p className="auth-form-sub">Enter your credentials to access your account</p>
         </div>
 

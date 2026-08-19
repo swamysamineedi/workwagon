@@ -1,9 +1,12 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import Button from './Button';
 
 export default function Navbar() {
   const { isAuthenticated, user } = useAuth();
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const navigate = useNavigate();
 
   const dashboardPath = user?.role === 'worker' ? '/worker'
     : user?.role === 'shop' ? '/shop'
@@ -32,9 +35,31 @@ export default function Navbar() {
             </Link>
           ) : (
             <>
-              <Link to="/login">
-                <Button variant="ghost" size="sm">Log in</Button>
-              </Link>
+              <div 
+                className={`login-dropdown-wrapper ${isLoginOpen ? 'open' : ''}`}
+                onMouseEnter={() => setIsLoginOpen(true)}
+                onMouseLeave={() => setIsLoginOpen(false)}
+              >
+                <button 
+                  className="btn btn-ghost btn-sm"
+                  onClick={() => setIsLoginOpen(!isLoginOpen)}
+                  aria-haspopup="true"
+                  aria-expanded={isLoginOpen}
+                >
+                  Login ▼
+                </button>
+                <div className="login-dropdown-menu">
+                  <Link to="/login" state={{ role: 'worker' }} className="login-dropdown-item" onClick={() => setIsLoginOpen(false)}>
+                    👷 Worker
+                  </Link>
+                  <Link to="/login" state={{ role: 'shop' }} className="login-dropdown-item" onClick={() => setIsLoginOpen(false)}>
+                    🏪 Business
+                  </Link>
+                  <Link to="/admin/login" className="login-dropdown-item" onClick={() => setIsLoginOpen(false)}>
+                    👑 Admin
+                  </Link>
+                </div>
+              </div>
               <Link to="/register/worker">
                 <Button variant="primary" size="sm">Get Started</Button>
               </Link>

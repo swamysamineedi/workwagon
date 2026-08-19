@@ -12,6 +12,13 @@ const PAGE_TITLES = {
   '/shop/find-workers': 'Find Workers',
   '/shop/profile':    'Business Profile',
   '/shop/vacancies/new': 'Post a Vacancy',
+  '/admin':           'Admin Dashboard',
+  '/admin/users':     'Manage Workers',
+  '/admin/businesses': 'Manage Businesses',
+  '/admin/verifications': 'Pending Verifications',
+  '/admin/vacancies': 'Vacancy Moderation',
+  '/admin/reports':   'Platform Reports',
+  '/admin/analytics': 'Platform Analytics',
 };
 
 export default function AppLayout({ role }) {

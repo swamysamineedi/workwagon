@@ -55,8 +55,8 @@ const reportSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['pending', 'reviewed', 'actioned', 'dismissed'],
-      default: 'pending',
+      enum: ['OPEN', 'UNDER_REVIEW', 'RESOLVED', 'DISMISSED'],
+      default: 'OPEN',
     },
     resolvedBy: {
       type: mongoose.Schema.Types.ObjectId,

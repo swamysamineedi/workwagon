@@ -58,9 +58,10 @@ const connectionSchema = new mongoose.Schema(
       required: true,
     },
     shopRequest: {
+      // Optional — not set when a business directly accepts a worker's request
+      // (as opposed to a mutual-match where both sides sent requests)
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Request',
-      required: true,
     },
     status: {
       type: String,
