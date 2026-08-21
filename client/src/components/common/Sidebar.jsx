@@ -23,6 +23,7 @@ export default function Sidebar({ role, mobileOpen, onClose }) {
     { to: '/worker', icon: '🏠', label: 'Home' },
     { to: '/worker/jobs', icon: '🔍', label: 'Discover Jobs' },
     { to: '/worker/connections', icon: '🤝', label: 'Connections' },
+    { to: '/worker/messages', icon: '💬', label: 'Messages' },
     { to: '/worker/profile', icon: '👤', label: 'My Profile' },
   ];
 
@@ -31,6 +32,7 @@ export default function Sidebar({ role, mobileOpen, onClose }) {
     { to: '/shop/vacancies', icon: '📋', label: 'My Vacancies' },
     { to: '/shop/find-workers', icon: '🔍', label: 'Find Workers' },
     { to: '/shop/connections', icon: '🤝', label: 'Connections' },
+    { to: '/shop/messages', icon: '💬', label: 'Messages' },
     { to: '/shop/profile', icon: '🏢', label: 'Business Profile' },
   ];
 

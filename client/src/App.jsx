@@ -29,6 +29,10 @@ import EditVacancy      from './pages/shop/EditVacancy';
 import FindWorkers      from './pages/shop/FindWorkers';
 import ShopConnections  from './pages/shop/ShopConnections';
 
+// Chat pages (Phase 7)
+import MessagesPage from './pages/chat/MessagesPage';
+import ChatPage     from './pages/chat/ChatPage';
+
 // Admin pages
 import AdminDashboard     from './pages/admin/AdminDashboard';
 import UsersManagement    from './pages/admin/UsersManagement';
@@ -65,6 +69,9 @@ export default function App() {
           <Route path="jobs"      element={<DiscoverJobs />} />
           <Route path="jobs/:id"  element={<JobDetail />} />
           <Route path="connections" element={<WorkerConnections />} />
+          {/* Phase 7 — Chat */}
+          <Route path="messages"          element={<MessagesPage />} />
+          <Route path="chat/:connectionId" element={<ChatPage />} />
         </Route>
 
         {/* ── Shop area ───────────────────────────────────────────────────── */}
@@ -83,6 +90,9 @@ export default function App() {
           <Route path="vacancies/:id/edit"    element={<EditVacancy />} />
           <Route path="find-workers"          element={<FindWorkers />} />
           <Route path="connections"           element={<ShopConnections />} />
+          {/* Phase 7 — Chat */}
+          <Route path="messages"          element={<MessagesPage />} />
+          <Route path="chat/:connectionId" element={<ChatPage />} />
         </Route>
 
         {/* ── Admin ─────────────────────────────────────────────────────────── */}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { requestService } from '../../services/requestService';
 import { connectionService } from '../../services/connectionService';
 import Avatar from '../../components/common/Avatar';
@@ -17,6 +17,7 @@ const STATUS_BADGE = {
 };
 
 export default function WorkerConnections() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab]   = useState('connections');
   const [connections, setConnections] = useState([]);
   const [inbox, setInbox]           = useState([]);
@@ -159,7 +160,19 @@ export default function WorkerConnections() {
                     Connected {new Date(c.createdAt).toLocaleDateString()}
                   </div>
                 </div>
-                <span className="badge badge-success">Active</span>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem', flexShrink: 0 }}>
+                  <span className="badge badge-success">Active</span>
+                  {c.status === 'active' && (
+                    <button
+                      className="btn btn-primary btn-sm"
+                      onClick={() => navigate(`/worker/chat/${c._id}`)}
+                      id={`open-chat-worker-${c._id}`}
+                      style={{ fontSize: '0.78rem', padding: '0.35rem 0.75rem' }}
+                    >
+                      💬 Open Chat
+                    </button>
+                  )}
+                </div>
               </div>
             ))
           )}

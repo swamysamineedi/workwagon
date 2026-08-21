@@ -34,4 +34,7 @@ router.use('/connections', require('./connections'));
 // router.use('/notifications', require('./notifications'));
 router.use('/admin', require('./admin'));
 
+// ── Phase 7 ───────────────────────────────────────────────────────────────────
+router.use('/messages', require('./messages'));
+
 module.exports = router;
